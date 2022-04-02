@@ -45,7 +45,7 @@ $( document ).ready(function(){
     const secs = Math.floor(difference / 1000);
     difference -= secs * 1000
 
-    setTime(hours, mins, secs, days);
+    setTime(hours, mins, secs, days);g
 
     let month = MONTHS[date.getMonth()];
     // let day = date.getDate();
