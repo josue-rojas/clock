@@ -2,47 +2,63 @@ $( document ).ready(function(){
   const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const DAYNAME = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
+  const date = new Date(location.hash || '04/20/2022');
+  
   let prevHourDeg = 0;
   let prevMinDeg = 0;
   let prevSecDeg = 0;
   //all elements we are using
-  const $hourHand = $('.clock-wrapper .hour-hand');
-  const $minHand = $('.clock-wrapper .min-hand');
-  const $secHand = $('.clock-wrapper .sec-hand');
+  const $dayLeftText = $('.time-wrapper #day-number');
   const $hourText = $('.time-wrapper #hour');
   const $minText = $('.time-wrapper #min');
+  const $secText = $('.time-wrapper #second');
   const $monthText = $('.time-wrapper #month');
-  const $dayText = $('.time-wrapper #day');
   const $dayNameText = $('.time-wrapper #day-name');
+  const $dayNumber = $('.time-wrapper #day');
 
   // initial set clock
   setClock();
 
   setInterval(setClock, 1000);
+  
+  // helper function to console on non computers
+  function showConsole(any) {
+    $('.console').text(any.toString());
+  };
 
   // set the whole thing in motion (sets clock and date, main function);
   function setClock(){
-    let date = new Date();
-    let hour = date.getHours();
-    let min = date.getMinutes();
-    let sec = date.getSeconds();
-    setTime(hour, min, sec);
-    let month = MONTHS[date.getMonth()];
-    let day = date.getDate();
-    let dayName = DAYNAME[date.getDay()];
-    setDate(month, day, dayName);
-  }
+    const today = new Date().getTime()
+    let difference = date.getTime() - today;
+    const daysConvert = 24 * 60 * 60 * 1000
+    const days = Math.floor((difference/daysConvert));
+    difference -= days * daysConvert;
 
+    const hoursConvert = 1000 * 60 * 60;
+    const hours = Math.floor(difference / hoursConvert);
+    difference -= hours * hoursConvert
+
+    const minsConvert = 1000 * 60;
+    const mins = Math.floor(difference / minsConvert);
+    difference -= mins * minsConvert
+
+    const secs = Math.floor(difference / 1000);
+    difference -= secs * 1000
+
+    setTime(hours, mins, secs, days);
+
+    let month = MONTHS[date.getMonth()];
+    // let day = date.getDate();
+    let dayName = DAYNAME[date.getDay()];
+    setDate(month, date.getDate(), dayName);
+  }
+  
   // sets the time part. the clock and the time text
-  function setTime(hour, min, sec){
-    if(sec == 0 && prevSecDeg != sec) smoothTransitionReset($secHand, sec, prevSecDeg*6);
-    else $secHand.css('transform', `rotate(${sec*6}deg)`);
-    if(min == 0 && prevMinDeg != min) smoothTransitionReset($minHand, min, prevMinDeg*6);
-    else $minHand.css('transform', `rotate(${min*6}deg)`);
-    if(hour == 0 && prevHourDeg != hour) smoothTransitionReset($hourHand, hour, (prevHourDeg*30)%360);
-    else $hourHand.css('transform', `rotate(${hour*30}deg)`);
-    $hourText.text(hour);
+  function setTime(hour, min, sec, day){
+    $dayLeftText.text(day);
+    $hourText.text(hour < 10 ? `0${hour}` : hour);
     $minText.text(min < 10 ? `0${min}` : min);
+    $secText.text(sec < 10 ? `0${sec}` : sec);
     prevHourDeg = hour;
     prevMinDeg = min;
     prevSecDeg = sec;
@@ -51,19 +67,7 @@ $( document ).ready(function(){
   // sets the date text
   function setDate(month, day, dayName){
     $monthText.text(month);
-    $dayText.text(` ${day}`);
+    $dayNumber.text(` ${day}`);
     $dayNameText.text(dayName);
-  }
-
-  // makes the transition smooth when going from a degree to 0 degrees
-  function smoothTransitionReset(el, nextTime, prevAngle){
-    let inverDeg =  -1 * (360 - prevAngle);
-    el.css('transition', 'transform 0');
-    el.css('transform', `rotate(${inverDeg}deg)`)
-    // gotta delay the transition so it won't be that instant
-    setTimeout(()=>{
-      el.css({'transition': 'transform 200ms'});
-      el.css('transform', `rotate(0deg)`);
-    }, 1)
   }
 });
