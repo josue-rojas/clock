@@ -4,9 +4,6 @@ $( document ).ready(function(){
 
   const date = new Date(location.hash || '04/20/2022');
   
-  let prevHourDeg = 0;
-  let prevMinDeg = 0;
-  let prevSecDeg = 0;
   //all elements we are using
   const $dayLeftText = $('.time-wrapper #day-number');
   const $hourText = $('.time-wrapper #hour');
@@ -45,12 +42,12 @@ $( document ).ready(function(){
     const secs = Math.floor(difference / 1000);
     difference -= secs * 1000
 
-    setTime(hours, mins, secs, days);g
+    setTime(hours, mins, secs, days);
 
     let month = MONTHS[date.getMonth()];
-    // let day = date.getDate();
+    let day = date.getDate();
     let dayName = DAYNAME[date.getDay()];
-    setDate(month, date.getDate(), dayName);
+    setDate(month, day, dayName);
   }
   
   // sets the time part. the clock and the time text
@@ -59,9 +56,6 @@ $( document ).ready(function(){
     $hourText.text(hour < 10 ? `0${hour}` : hour);
     $minText.text(min < 10 ? `0${min}` : min);
     $secText.text(sec < 10 ? `0${sec}` : sec);
-    prevHourDeg = hour;
-    prevMinDeg = min;
-    prevSecDeg = sec;
   }
 
   // sets the date text
