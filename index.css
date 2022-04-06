@@ -78,3 +78,10 @@ p, h1, h2, h3, h4, h5, h6 {
   text-align: center;
   color: rgb(137, 136, 139);
 }
+
+
+#confetti-canvas {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+}
