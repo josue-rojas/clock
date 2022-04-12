@@ -246,7 +246,7 @@ function ConfettiGenerator(params) {
   }
 }
 
-const DEFAULT_DATE = '04/12/2022 18:30';
+const DEFAULT_DATE = '04/12/2022 19:00';
 
 function decodeHash(hash) {
   try {
